@@ -1,0 +1,389 @@
+$font: Pfagora, Arial, Tahoma, Verdana, sans-serif;
+
+@font-face {
+	font-family: "Pfagora";
+	src: url("../fonts/pfagorasanspro-reg.eot");
+	src: local('Pfagora'),
+	url("../fonts/pfagorasanspro-reg.eot?#iefix") format("embedded-opentype"),
+	url("../fonts/pfagorasanspro-reg.woff") format("woff"),
+	url("../fonts/pfagorasanspro-reg.ttf") format("truetype"),
+	url("../fonts/pfagorasanspro-reg.svg#Pfagora") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Pfagora";
+	src: url("../fonts/pfagorasanspro-bold.eot");
+	src: local('Pfagora'),
+	url("../fonts/pfagorasanspro-bold.eot?#iefix") format("embedded-opentype"),
+	url("../fonts/pfagorasanspro-bold.woff") format("woff"),
+	url("../fonts/pfagorasanspro-bold.ttf") format("truetype"),
+	url("../fonts/pfagorasanspro-bold.svg#Pfagora") format("svg");
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Pfagora";
+	src: url("../fonts/pfagorasanspro-italic.eot");
+	src: local('Pfagora'),
+	url("../fonts/pfagorasanspro-italic.eot?#iefix") format("embedded-opentype"),
+	url("../fonts/pfagorasanspro-italic.woff") format("woff"),
+	url("../fonts/pfagorasanspro-italic.ttf") format("truetype"),
+	url("../fonts/pfagorasanspro-italic.svg#Pfagora") format("svg");
+	font-weight: normal;
+	font-style: italic;
+}
+@font-face {
+	font-family: "Pfagora";
+	src: url("../fonts/pfagorasanspro-bolditalic.eot");
+	src: local('Pfagora'),
+	url("../fonts/pfagorasanspro-bolditalic.eot?#iefix") format("embedded-opentype"),
+	url("../fonts/pfagorasanspro-bolditalic.woff") format("woff"),
+	url("../fonts/pfagorasanspro-bolditalic.ttf") format("truetype"),
+	url("../fonts/pfagorasanspro-bolditalic.svg#Pfagora") format("svg");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@mixin transition($what, $time, $opt) {
+  transition: $what $time $opt;
+	-webkit-transition: $what $time $opt;
+  -moz-transition: $what $time $opt;
+  -o-transition: $what $time $opt;
+}
+
+@mixin gradient($from, $to) {
+	background-color: $from;
+	background: linear-gradient($from, $to);
+	background: -moz-linear-gradient($from, $to);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($to));
+	background: -webkit-linear-gradient($from, $to);
+	background: -o-linear-gradient($from, $to);
+}
+
+@mixin radius($radius) {
+	border-radius: $radius;
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-khtml-border-radius: $radius;
+	behavior: url(PIE.htc);
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html {
+	height: 100%;
+}
+body {
+	// @include gradient(#ccc, #777);
+	background: url(../img/body_bg.jpg);
+	line-height: 1;
+	height: 100%;
+}
+p {
+	margin: 10px 0;
+}
+.clearfix:before, .clearfix:after {
+	content: "";
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+}
+.clearfix {
+	zoom: 1;
+}
+#wrapper {
+	margin: 0 auto;
+	width: 100%;
+	min-width: 960px;
+	// width: 1200px;
+	min-height: 100%;
+}
+#wrapper::after {
+	content: '';
+	display: table;
+	height: 60px;
+}
+
+header {
+	background: #555;
+	height: 100px;
+	border-bottom: 5px solid #888;
+	position: relative;
+	#logo {
+		float: left;
+		height: 80px;
+		padding: 10px 0 0 20px;
+		a {
+			height: 80px;
+			position: relative;
+			padding: 10px 0 0 20px;
+			img {
+				height: 80px;
+			}
+		}
+	}
+	#site {
+		float: right;
+		position: relative;
+		right: 640px;
+		top: 42px;
+		a {
+			color: #fff;
+			font: 18px $font;
+			text-decoration: none;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+	#admin {
+		color: #fff;
+		float: right;
+		font: 20px $font;
+		position: relative;
+		top: 38px;
+		p {
+			float: left;
+			position: relative;
+			top: -8px;
+			right: 190px;
+			span {
+				color: #fc0;
+				font: 20px $font;
+			}
+		}
+		a.exit {
+			color: #fc0;
+			float: right;
+			font: 17px $font;
+			position: relative;
+			right: 30px;
+			text-decoration: none;
+			top: 4px;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}
+#main {
+	width: 100%;
+}
+
+aside#leftbar {
+	background: #444;
+	float: left;
+	// padding-bottom: 60px;
+	width: 200px;
+	h2 {
+		color: #fc0;
+		font: 20px $font;
+		text-align: center;
+		padding: 18px 0;
+		text-transform: uppercase;
+	}
+	ul {
+		li {
+			a {
+				@include gradient(#666, #333);
+				border-bottom: 1px solid #999;
+				color: #fff;
+				display: block;
+				font: 19px $font;
+				padding: 22px 0;
+				text-align: center;
+				text-decoration: none;
+				@include transition(all, .6s, ease);
+				&:hover {
+					@include gradient(#070707, #333);
+					color: #fc0;
+				}
+			}
+			&:first-child a {
+				border-top: 1px solid #999;
+			}
+		}
+	}
+}
+
+#content {
+	background: #e5e5e5;
+	// width: 100%;
+	// min-width: 960px;
+	// width: 960px;
+	margin-left: 200px;
+	padding: 20px 20px 100px;
+	h2 {
+		color: #333;
+		font: 20px $font;
+		margin: 0 0 10px;
+		text-align: center;
+	}
+	h3 {
+		color: #333;
+		font: 22px $font;
+		margin: 0 0 10px;
+		text-align: center;
+	}
+	p {
+		color: #333;
+		font: 16px $font;
+		margin: 20px 0;
+	}
+	a.add_article {
+		@include radius(4px);
+		@include gradient(#fff, #d4d4d4);
+		border: 1px solid #999;
+		color: #000;
+		font: 16px $font;
+		display: block;
+		height: 25px;
+		margin: 10px 0;
+		padding: 7px 0 1px 0;
+		text-decoration: none;
+		text-align: center;
+		width: 150px;
+		&:hover {
+			@include gradient(#fff, #e9e9e9);
+		}
+	}
+	a.add_user {
+		@extend a.add_article;
+		width: 250px;
+	}
+	table#articles {
+		border: 1px solid #666;
+		color: #333;
+		width: 100%;
+		tr {
+			border-top: 1px solid #666;
+			font: 14px $font;
+			th {
+				background: #d4d4d4;
+				border-left: 1px solid #666;
+				color: #00c;
+				padding: 12px 8px;
+				text-align: center;
+			}
+			.id_article {
+				font: bold 14px $font;
+				text-align: center;
+				width: 25px;
+			}
+			th.add_date {
+				width: 70px;
+			}
+			th.link {
+				max-width: 260px;
+			}
+			td {
+				border-left: 1px solid #666;
+				padding: 8px;
+				a {
+					color: #000;
+					text-decoration: none;
+					@include transition(all, .4s, ease);
+					&:hover {
+						color: #a70;
+						text-decoration: underline;
+					}
+				}
+			}
+			td.author_article {
+				font: 12px $font;
+				width: 170px;
+			}
+			td.link {
+				max-width: 260px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			td.del_article {
+				width: 18px;
+				a {
+					img {
+						width: 18px;
+					}
+				}
+			}
+		}
+	}
+
+	input[type=text], input[type=password] {
+		font: 16px $font;
+		padding: 6px 5px 4px 5px;
+		width: 400px;
+	}
+	textarea {
+		height: 150px;
+		padding: 10px;
+		width: 700px;
+	}
+	input[type=submit] {
+		@include radius(4px);
+		@include gradient(#fff, #d4d4d4);
+		font: 16px $font;
+		height: 40px;
+		width: 210px;
+		&:hover {
+			@include gradient(#fff, #e9e9e9);
+		}
+	}
+}
+
+footer {
+	@include gradient(#070707, #333);
+	margin: -60px auto 0;
+	width: 100%;
+	min-width: 960px;
+	height: 60px;
+	position: relative;
+	#copyright {
+		color: #fff;
+		font: 14px $font;
+		text-align: center;
+		position: relative;
+		top: 24px;
+	}
+}
+
+.success {
+	background: #cfc;
+	border: 1px solid #080;
+	color: #080;
+	font: 14px $font;
+	padding: 10px;
+}
+
+.error {
+	background: #fbb;
+	border: 1px solid #b00;
+	color: #b00;
+	font: 14px $font;
+	padding: 10px;
+}

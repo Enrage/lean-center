@@ -1,0 +1,116 @@
+#wrapper {
+	overflow: hidden;
+	padding-bottom: 30px;
+}
+
+#first_top_menu li {
+	display: inline !important;
+}
+#logotip a {
+	position: relative;
+	top: 5px !important;
+}
+#right_top_menu ul li {
+	float: left;
+}
+
+#second_top_menu {
+	margin: 10px 0 30px;
+}
+#second_top_menu ul {
+	margin: 0 0 0 25px;
+}
+.lines {
+	float: left;
+	margin: 0 10px 0 0;
+	position: relative;
+	top: 15px !important;
+}
+.search {
+	float: right;
+	position: relative;
+	right: 45px !important;
+}
+.search_block {
+	position: absolute !important;
+	right: 40px !important;
+	top: -60px !important;
+}
+
+.author {
+	margin: 0 6px 0 0 !important;
+}
+.author img {
+	position: relative;
+	top: -25px;
+	margin: 0 4px 0 0;
+}
+.date {
+	font: 13px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+.date a {
+	font: 13px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+
+#content .block_news h1 a {
+	font: 15px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+
+#comments {
+	margin: 20px 0 0;
+}
+.block_comment {
+	border: 1px solid #666;
+	margin: 0 0 20px !important;
+	min-height: 40px;
+}
+.comment_author {
+	position: relative;
+}
+.comment_author span {
+	position: absolute;
+	right: 15px;
+	top: 7px;
+}
+
+#anons_news p a {
+	font: 15px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+
+#archive_events .archive_news h2 a {
+	font: 16px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+
+footer {
+	margin: 0 auto;
+}
+
+#footer_menu ul li {
+	margin: 2px 18px !important;
+}
+
+#copyright {
+	font: 11px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+#copyright span + span {
+	margin-right: 30px;
+}
+
+/* Регистрация */
+.enter {
+	padding: 5px 0 10px;
+}
+.remember {
+	margin: 6px 0 0 10px !important;
+}
+.remember input {
+	margin: 0 1px 0 4px !important;
+	position: relative;
+	top: -1px;
+}
+.registration {
+	padding: 15px 0 10px !important;
+}
+.registration p {
+	font: 15px Arial, Tahoma, Verdana, sans-serif !important;
+}

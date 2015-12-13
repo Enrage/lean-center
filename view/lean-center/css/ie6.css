@@ -1,0 +1,73 @@
+#wrapper {
+	padding-bottom: 0 !important;
+}
+
+#first_top_menu li {
+	display: inline !important;
+}
+#logotip a {
+	position: relative;
+	top: 18px !important;
+}
+#right_top_menu ul li {
+	float: left;
+}
+
+#second_top_menu {
+	margin: 15px 0 30px;
+}
+
+.search {
+	float: right;
+	position: relative;
+	right: 45px !important;
+}
+.search_block {
+	position: absolute !important;
+	right: 40px !important;
+	top: -60px !important;
+}
+
+#our_partners .partners {
+	width: 290px !important;
+}
+#our_partners .partners tr td a {
+	display: block;
+	max-width: 270px !important;
+}
+#our_partners .partners tr td a img {
+	max-width: 270px !important;
+}
+
+footer {
+	margin: 0 auto;
+}
+#footer_menu ul li {
+	margin: 2px 16px !important;
+}
+#copyright {
+	font: 11px 'Pfagora', Arial, Tahoma, Verdana, sans-serif !important;
+}
+#copyright span + span {
+	color: #fff !important;
+	margin-right: 20px;
+}
+
+/* Регистрация */
+.enter {
+	padding: 5px 0 10px;
+}
+.remember {
+	margin: 6px 0 0 10px !important;
+}
+.remember input {
+	margin: 0 1px 0 4px !important;
+	position: relative;
+	top: -1px;
+}
+.registration {
+	padding: 15px 0 10px !important;
+}
+.registration p {
+	font: 15px Arial, Tahoma, Verdana, sans-serif !important;
+}
