@@ -122,8 +122,6 @@ class tests extends model {
 		// }
 		if($correct_value > 2) {
 			$print_res .= '<p class="session true">Поздравляем, Вы успешно сдали тестирование!</p>';
-			// $to = $_SESSION['auth']['email'];
-			// mailsend::sendMail($to, 'Успешное прохождение тестирования', 'Спасибо за прохождение тестирования', $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/cert_{$this->id}.png", '', '', '', true);
 		}
 		else {
 			$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
@@ -211,10 +209,11 @@ class tests extends model {
 			$fs_date = 36;
 			$fs_email = 30;
 			$fs_name = 65;
-			$date = date('d.m.Y', $this->date);
+			if(strlen($this->email) > 26) $fs_email = 25;
+			$date = date('d.m.Y H:i', $this->date);
 			// $len = 1500 - (int)(strlen($this->name));
-			imagettftext($im, $fs_date, 0, 2600, 365, $color, $font, $date);
-			imagettftext($im, $fs_email, 0, 2490, 500, $color, $font, $this->email);
+			imagettftext($im, $fs_date, 0, 2540, 365, $color, $font, $date);
+			imagettftext($im, $fs_email, 0, 2485, 500, $color, $font, $this->email);
 			imagettftext($im, $fs_name, 0, (int)(1200 - strlen($this->name)), 980, $color, $font, $this->name);
 			return $im;
 		};
@@ -222,9 +221,15 @@ class tests extends model {
 		if(isset($_POST)) {
 			header("Content-type: image/png");
 			$i = $img($_SERVER['DOCUMENT_ROOT'].'/userfiles/files/cert.png');
-			imagepng($i, $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/cert_{$this->id}.png");
+			imagepng($i, $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/Lean_cert_{$this->id}.png");
 			imagedestroy($i);
 		}
+	}
+
+	public function send_cert() {
+		$to = $_SESSION['auth']['email'];
+		mailsend::sendMail($to, 'Успешное прохождение тестирования', 'Спасибо за прохождение тестирования', $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/Lean_cert_{$this->id}.png", '', '', '', true);
+		return true;
 	}
 }
 ?>
