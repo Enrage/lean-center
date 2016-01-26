@@ -7,7 +7,6 @@ class journal_lean extends Core {
 		$this->start_pos = $this->pos()['start_pos'];
 		$this->perpage = config::PERPAGE_ARTICLES;
 		$res = $this->m->get_journal_lean($this->start_pos, $this->perpage);
-		// $res = $this->m->get_articles('Сертификация', $this->start_pos, $this->perpage);
 		return $res;
 	}
 

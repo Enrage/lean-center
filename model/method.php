@@ -52,6 +52,7 @@ class method {
 		die();
 	}
 
+	// Выход из аккаунта
 	public function logout() {
 		unset($_SESSION['auth']);
 	}

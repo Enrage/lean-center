@@ -1,4 +1,6 @@
-<?php defined('LEAN') or die('Access Denied')?>
+<?php defined('LEAN') or die('Access Denied');
+$email = $_SESSION['auth']['email'] ?? null;
+?>
 <section id="top_block">
 	<nav id="first_top_menu">
 		<ul>
@@ -23,8 +25,12 @@
 	</nav>
 
 	<div id="enter">
-		<?php if(isset($_SESSION['auth']['user'])): ?>
-		<p class="profile"><span><?=$_SESSION['auth']['email']?></span></p>
+		<?php if(isset($_SESSION['auth'])): ?>
+			<?php if(!empty($_SESSION['auth']['user'])): ?>
+			<p class="profile"><span><?=$_SESSION['auth']['user']?> <i>(Личный кабинет)</i></span></p>
+			<?php elseif(!empty($_SESSION['auth']['email'])): ?>
+			<p class="profile"><span><?=$_SESSION['auth']['email']?> <i>(Личный кабинет)</i></span></p>
+			<?php endif; ?>
 		<?php else: ?>
 		<a href="?view=reg"><img src="<?=config::TEMPLATE?>img/enter.png" width="26" alt="Enter">Войти</a>
 		<?php endif; ?>

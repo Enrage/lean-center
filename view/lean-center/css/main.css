@@ -108,6 +108,11 @@ iframe {
   content: ') ';
 }
 
+.left_img {
+  float: left;
+  margin: 0 15px 15px 0 !important;
+}
+
 #wrapper {
   background: #fff;
   box-shadow: 0 0 25px 2px rgba(0, 0, 0, 0.3);
@@ -227,16 +232,21 @@ header {
   position: relative;
 }
 #enter .profile {
+  color: #00A3D9;
   float: right;
   position: absolute;
   top: 10px;
   right: 0;
+  width: 380px;
 }
 #enter .profile span {
-  color: #00A3D9;
   cursor: pointer;
   float: right;
   font: bold 15px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+}
+#enter .profile span i {
+  font-style: normal;
+  font-weight: normal;
 }
 #enter a {
   color: #868786;
@@ -335,7 +345,7 @@ header {
 #second_top_menu ul li {
   display: table-cell;
   float: left;
-  margin: 0 16px;
+  margin: 0 11px;
   text-align: center;
 }
 #second_top_menu ul li:first-child {
@@ -630,13 +640,13 @@ header {
   font: bold 15px Pfagora, Arial, Tahoma, Verdana, sans-serif;
   text-align: center;
 }
-.article table.deloproizvodstvo tr td {
+.article table.deloproizvodstvo tr td, .article table.deloproizvodstvo tr th {
   border-top: 1px solid #666;
   border-left: 1px solid #666;
   padding: 15px;
   vertical-align: top;
 }
-.article table.deloproizvodstvo tr td:first-child {
+.article table.deloproizvodstvo tr td:first-child, .article table.deloproizvodstvo tr th:first-child {
   border-left: none;
 }
 .article table.deloproizvodstvo tr:first-child td {
@@ -1076,7 +1086,7 @@ header {
   -khtml-border-radius: 5px;
   behavior: url(PIE.htc);
   background: #fff;
-  height: 155px;
+  height: 200px;
   padding: 15px 0 0;
   position: relative;
 }
@@ -1121,12 +1131,12 @@ header {
   -moz-transition: all 0.6s ease;
   -o-transition: all 0.6s ease;
   color: #000;
+  display: block;
   font: bold 14px Pfagora, Arial, Tahoma, Verdana, sans-serif;
-  float: right;
+  margin: 0 auto;
   padding: 5px 0;
   position: relative;
-  top: 10px;
-  right: 13px;
+  top: 13px;
   width: 160px;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr=#fbac36,endColorstr=#fec64e,GradientType=0);
   zoom: 1;
@@ -1521,7 +1531,7 @@ footer #footer_menu {
   height: 20px;
 }
 footer #footer_menu ul li {
-  margin: 2px 20px;
+  margin: 2px 16px;
   float: left;
 }
 footer #footer_menu ul li a {
@@ -1590,7 +1600,7 @@ footer #copyright span + span {
   color: #888;
 }
 
-.error {
+.error, .error_reg {
   background: #f0f0f0;
   color: #900;
   font: 16px Pfagora, Arial, Tahoma, Verdana, sans-serif;
@@ -1616,6 +1626,10 @@ footer #copyright span + span {
   padding: 15px;
   margin: 15px;
   width: 568px;
+}
+
+.error_reg {
+  margin-right: 0;
 }
 
 .notfound {
@@ -1701,4 +1715,155 @@ a.reg_business:hover, a.reg_tour:hover {
 .zavtrak tr td:first-child, .japan_tour tr td:first-child {
   text-align: right;
   padding: 0 10px 0 0;
+}
+
+.tests {
+  margin: 0 30px 0 0;
+}
+.tests h2, .tests #settings h2, #settings .tests h2 {
+  color: #000;
+  font: bold 22px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+  margin: 10px 0;
+  text-align: center;
+}
+.tests .test h3.ntest {
+  border-bottom: 2px dotted #999;
+  color: #00A3D9;
+  font: bold 20px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+  margin: 10px 0;
+  padding: 0 0 10px;
+}
+.tests .test .question {
+  display: none;
+}
+.tests .test .question .q {
+  font: bold 17px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+  margin: 15px 0;
+}
+.tests .test .question .a {
+  font: 16px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+  margin: 10px 0;
+}
+.tests .test .next_q {
+  margin: 30px 0 25px 16px !important;
+  width: 150px !important;
+}
+.tests .paginat {
+  margin: 30px 0 14px;
+  text-align: center;
+}
+.tests .paginat a {
+  background: #eee;
+  border: 1px solid #666;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -khtml-border-radius: 15px;
+  behavior: url(PIE.htc);
+  color: #000;
+  display: inline-block;
+  font: 15px Roboto, Tahoma, Arial, Verdana;
+  height: 22px;
+  margin: 4px 6px;
+  padding: 5px 1px 1px;
+  text-decoration: none;
+  width: 28px;
+}
+.tests .paginat a:hover {
+  background: #b5edff;
+}
+.tests .paginat a.nav-active {
+  background: #73dcff;
+}
+.tests .btn {
+  background: #dcdcdc -webkit-linear-gradient(#fff, #dcdcdc);
+  background: #dcdcdc linear-gradient(#fff, #dcdcdc);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: #000;
+  cursor: pointer;
+  display: block;
+  margin: 45px auto 25px;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  -webkit-transition: all .8s;
+          transition: all .8s;
+  width: 200px;
+}
+.tests .btn:hover {
+  background: #dcdcdc -webkit-linear-gradient(#dcdcdc, #fff);
+  background: #dcdcdc linear-gradient(#dcdcdc, #fff);
+  border: 1px solid #aaa;
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
+  -khtml-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
+}
+.tests .btn2, .tests .test .next_q {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 45px auto 25px;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  width: 200px;
+}
+
+.result {
+  margin: 0 30px 0 0;
+}
+.result .result_test .session {
+  font: bold 21px Pfagora, Arial, Tahoma, Verdana, sans-serif !important;
+  margin: 20px 0;
+  text-align: center;
+}
+.result .result_test .true {
+  color: green;
+}
+.result .result_test .false {
+  color: #f55;
+}
+.result .result_test .questions .count-res {
+  font: 18px Pfagora, Arial, Tahoma, Verdana, sans-serif !important;
+  margin: 0 0 20px 0;
+}
+.result .result_test .questions .n_question {
+  color: #00A3D9;
+  font: bold 19px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+}
+.result .result_test .questions .question-res {
+  color: #000 !important;
+  margin: 20px 0;
+  padding: 10px;
+}
+.result .result_test .questions .question-res .q {
+  font: bold 18px Pfagora, Arial, Tahoma, Verdana, sans-serif;
+  margin: 10px 0;
+}
+.result .result_test .questions .question-res .a {
+  font-size: 17px;
+  margin: 2px 0;
+  padding: 3px 7px;
+}
+.result .result_test .questions .question-res .ok2 {
+  background: #9f9;
+  color: #005500;
+}
+.result .result_test .questions .question-res .error2 {
+  background: #f77;
+  color: #000;
+  text-decoration: line-through;
+}
+.result .result_test .questions .ok {
+  border: 1px solid #adc092;
+  background: #eafdea;
+  color: #58715e;
+}
+.result .result_test .questions .error, .result .result_test .questions .error_reg {
+  border: 1px solid #dd2222;
+  background: #ffe8e8;
+  color: #cf2222;
 }

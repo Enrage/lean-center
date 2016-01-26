@@ -8,6 +8,7 @@
 			<li><a href="?view=articles">Статьи</a></li>
 			<li><a href="?view=authors">Авторы</a></li>
 			<li><a href="?view=journal_lean">Журнал «Lean-center.ru»</a></li>
+			<li><a href="?view=cpobp">ЦПОБП</a></li>
 			<li><a href="?view=videos">Видео</a></li>
 		</ul>
 	</nav>

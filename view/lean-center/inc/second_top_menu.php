@@ -8,6 +8,7 @@
 		<li><a href="?view=articles">Статьи</a></li>
 		<li><a href="?view=authors">Авторы</a></li>
 		<li><a href="?view=journal_lean">Журнал «lean-center.ru»</a></li>
+		<li><a href="?view=cpobp">ЦПОБП</a></li>
 		<li><a href="?view=videos">Видео</a></li>
 	</ul>
 	<p class="search"><img src="<?=config::TEMPLATE?>img/search_icon.png" width="26" alt="Поиск по сайту" title="Поиск по сайту"></p>

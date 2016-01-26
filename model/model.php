@@ -20,7 +20,7 @@ class model {
 		$this->now_date = time();
 		$this->activation = '0';
 		$this->mail = new Mail();
-		if(isset($_SESSION['auth']['user'])) $this->user_id = $_SESSION['auth']['user_id'];
+		$this->user_id = $_SESSION['auth']['user_id'] ?? null;
 	}
 
 	// Универсальный метод получения данных
@@ -110,6 +110,17 @@ class model {
 
 	public function get_journal_lean($start_pos, $perpage) {
 		$query = "SELECT * FROM articles WHERE journal = ? AND visible = ? ORDER BY add_date DESC, id DESC LIMIT $start_pos, $perpage";
+		$stmt = $this->db->prepare($query);
+		$stmt->execute([$this->razdel, $this->visible]);
+		$rows = [];
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$rows[] = $row;
+		}
+		return $rows;
+	}
+
+	public function get_cpobp($start_pos, $perpage) {
+		$query = "SELECT * FROM articles WHERE cpobp = ? AND visible = ? ORDER BY add_date DESC, id DESC LIMIT $start_pos, $perpage";
 		$stmt = $this->db->prepare($query);
 		$stmt->execute([$this->razdel, $this->visible]);
 		$rows = [];
@@ -222,6 +233,18 @@ class model {
 		return $rows[0]['count_rows'];
 	}
 
+	public function count_rows_cpobp() {
+		$query = "SELECT COUNT(id) as count_rows FROM articles WHERE visible = ?";
+		$query .= " AND cpobp = ?";
+		$stmt = $this->db->prepare($query);
+		$stmt->execute([$this->visible, $this->razdel]);
+		$rows = [];
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$rows[] = $row;
+		}
+		return $rows[0]['count_rows'];
+	}
+
 	// Получение списка последних новостей
 	public function get_news($limit) {
 		$query = "SELECT id, title, date, link, anons FROM news WHERE visible = ? ORDER BY date DESC LIMIT $limit";
@@ -291,8 +314,10 @@ class model {
 	public function registration() {
 		$error = '';
 		$reg_email = trim($_POST['reg_email']);
+		$reg_name = trim($_POST['reg_name']);
 		$pass = trim($_POST['reg_pass']);
 		if(empty($reg_email)) $error .= '<li>Не указан Email</li>';
+		if(empty($reg_name)) $error .= '<li>Не указано имя</li>';
 		if(empty($pass)) $error .= '<li>Не указан пароль</li>';
 		if(empty($error)) {
 			// Если все поля заполнены
@@ -302,15 +327,16 @@ class model {
 				$stmt->execute([$reg_email]);
 
 				if($stmt->rowCount() > 0) {
-					$_SESSION['reg']['res'] = "<div class='error'>Пользователь с таким E-mail уже существует!</div>";
+					$_SESSION['reg']['res'] = "<div class='error_reg'>Пользователь с таким E-mail уже существует!</div>";
 					$_SESSION['reg']['reg_email'] = $reg_email;
+					$_SESSION['reg']['reg_name'] = $reg_name;
+					$this->met->redirect('?view=reg');
 				} else {
-					$reg_email = $this->met->clr($_POST['reg_email']);
 					$reg_pass = md5($pass);
 					$reg_date = time();
-					$query = "INSERT INTO users (email, pass, reg_date) VALUES (?, ?, ?)";
+					$query = "INSERT INTO users (email, name, pass, reg_date) VALUES (?, ?, ?, ?)";
 					if(!$stmt = $this->db->prepare($query)) throw new Exception("Error prepare registration insert");
-					$stmt->execute([$reg_email, $reg_pass, $reg_date]);
+					if(!$stmt->execute([$reg_email, $reg_name, $reg_pass, $reg_date])) throw new Exception("Error execute");
 					if($stmt->rowCount() > 0) {
 						$_SESSION['reg']['res'] = "<div class='success'>Регистрация прошла успешно! На Ваш E-mail было выслано письмо с подтверждением регистрации.</div>";
 						$stmt = $this->db->prepare("SELECT user_id, email FROM users WHERE email = ?");
@@ -330,8 +356,9 @@ class model {
 						."From: Info@lean-center.ru";
             mail($row['email'], $subject, $message, $headers);
 					} else {
-						$_SESSION['reg']['res'] = "<div class='error'>Ошибка!</div>";
+						$_SESSION['reg']['res'] = "<div class='error_reg'>Ошибка!</div>";
 						$_SESSION['reg']['reg_email'] = $reg_email;
+						$_SESSION['reg']['reg_name'] = $reg_name;
 					}
 				}
 			} catch(Exception $e) {
@@ -340,8 +367,9 @@ class model {
 			}
 		} else {
 			// Если не заполнены обязательные поля
-			$_SESSION['reg']['res'] = "<div class='error'><b>Не заполнены обязательные поля:</b> <ul> $error </ul></div>";
+			$_SESSION['reg']['res'] = "<div class='error_reg'><b>Не заполнены обязательные поля:</b> <ul> $error </ul></div>";
 			$_SESSION['reg']['reg_email'] = $reg_email;
+			$_SESSION['reg']['reg_name'] = $reg_name;
 			$this->met->redirect('?view=reg');
 		}
 	}
@@ -392,12 +420,13 @@ class model {
 		$email = trim($_POST['email']);
 		$pass = trim($_POST['pass']);
 		$activation = '1';
-		$remember = isset($_POST['remember']) ? $_POST['remember'] : 0;
+		$remember = $_POST['remember'] ?? 0;
+		// $remember = isset($_POST['remember']) ? $_POST['remember'] : 0;
 		if(empty($email) OR empty($pass)) {
-			$_SESSION['auth']['error'] = "<div class='error'>Поля логин/пароль должны быть заполнены!</div>";
+			$_SESSION['auth']['error'] = "<div class='error_reg'>Поля логин/пароль должны быть заполнены!</div>";
 		} else {
 			$pass = md5($pass);
-			$query = "SELECT user_id, name, email FROM users WHERE email = ? AND pass = ? AND activation = ? LIMIT 1";
+			$query = "SELECT user_id, name, email, company, about FROM users WHERE email = ? AND pass = ? AND activation = ? LIMIT 1";
 			try {
 				if(!$stmt = $this->db->prepare($query)) throw new Exception("Error Prepare authorization");
 				$stmt->execute([$email, $pass, $activation]);
@@ -408,9 +437,11 @@ class model {
 					$_SESSION['auth']['user_id'] = $row['user_id'];
 					$_SESSION['auth']['user'] = $row['name'];
 					$_SESSION['auth']['email'] = $row['email'];
+					$_SESSION['auth']['company'] = $row['company'];
+					$_SESSION['auth']['about'] = $row['about'];
 					$this->met->redirect('?view=main');
 				} else {
-					$_SESSION['auth']['error'] = "<div class='error'>Логин или пароль введены неверно или Вы не подтвердили регистрацию!</div>";
+					$_SESSION['auth']['error'] = "<div class='error_reg'>Логин или пароль введены неверно или Вы не подтвердили регистрацию!</div>";
 				}
 			}
 			catch(Exception $e) {
@@ -465,6 +496,9 @@ class model {
 		$stmt = $this->db->prepare($query);
 		$stmt->execute([$name, $company_name, $about, $this->user_id]);
 		if($stmt->rowCount() > 0) {
+			$_SESSION['auth']['user'] = $name;
+			$_SESSION['auth']['company'] = $company_name;
+			$_SESSION['auth']['about'] = $about;
 			$_SESSION['res'] = "<div class='success'>Вы успешно обновили информацию!</div>";
 		}
 	}
@@ -646,7 +680,7 @@ class model {
 		if(empty($reg_email)) $error .= '<li>Не указан Email</li>';
 		if(empty($error)) {
 			// Если все поля заполнены
-			$query = "SELECT id FROM business_seminar WHERE email = ? LIMIT 1";
+			$query = "SELECT id FROM cpobp_reg WHERE email = ? LIMIT 1";
 			try {
 				if(!$stmt = $this->db->prepare($query)) throw new Exception("Error Prepare registration select");
 				$stmt->execute([$reg_email]);
@@ -658,24 +692,24 @@ class model {
 					$_SESSION['reg']['reg_phone'] = $reg_phone;
 					$_SESSION['reg']['reg_email'] = $reg_email;
 				} else {
-					$reg_name = $_POST['reg_name'];
-					$reg_company = $_POST['reg_company'];
-					$reg_phone = $_POST['reg_phone'];
-					$reg_email = $_POST['reg_email'];
+					// $reg_name = $_POST['reg_name'];
+					// $reg_company = $_POST['reg_company'];
+					// $reg_phone = $_POST['reg_phone'];
+					// $reg_email = $_POST['reg_email'];
 					$reg_date = date('d.m.Y H:i:s', $this->now_date);
-					$query = "INSERT INTO business_seminar (name, company, phone, email, reg_date) VALUES (?, ?, ?, ?, ?)";
+					$query = "INSERT INTO cpobp_reg (name, company, phone, email, reg_date) VALUES (?, ?, ?, ?, ?)";
 					if(!$stmt = $this->db->prepare($query)) throw new Exception("Error prepare registration insert");
 					$stmt->execute([$reg_name, $reg_company, $reg_phone, $reg_email, $reg_date]);
 					$last_id = $this->db->lastInsertId();
 					if($stmt->rowCount() > 0) {
 						$_SESSION['reg']['res'] = "<div class='success'>Большое спасибо за Вашу заявку! В ближайшее время мы свяжемся с Вами для уточнения деталей обучения!</div>";
-						$stmt = $this->db->prepare("SELECT id, name, company, phone, email, reg_date FROM business_seminar WHERE id = ?");
+						$stmt = $this->db->prepare("SELECT * FROM cpobp_reg WHERE id = ?");
 						$stmt->execute([$last_id]);
 						$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-						$to = [$row['email'], 'cpobp@lean-center.ru'];
-						$subject = "Заявка на обучение в ЦПОБП.";
-						$message = "<p style='font-size:16px; color:green; margin-bottom:20px;'>Большое спасибо за Вашу заявку на обучение в Центре практического обучения Бережливому производству. В ближайшее время мы свяжемся с Вами.</p>
+						$to_order = $row['email'];
+						$subject_order = "Заявка на обучение в ЦПОБП.";
+						$message_order = "<p style='font-size:16px; color:green; margin-bottom:20px;'>Большое спасибо за Вашу заявку на обучение в Центре практического обучения Бережливому производству. В ближайшее время мы свяжемся с Вами.</p>
 						<p><img src='".config::PATH.config::TEMPLATE."img/lean-center-icon.png' alt='Lean-center.ru'></p>
 						<p style='font-size:14px;'><b>Ваше имя:</b> ".$row['name']
 						."<br><b>Организация:</b> ".$row['company']
@@ -685,29 +719,28 @@ class model {
 						С уважением,<br>
 						Администрация Lean-center.ru</p>";
 
-						$this->mail->Subject($subject);
+						$this->mail->Subject($subject_order);
 						$this->mail->From("Lean-center;cpobp@lean-center.ru");
-						$this->mail->To($to);
-						$this->mail->Body($message, "html");
+						$this->mail->To($to_order);
+						$this->mail->Body($message_order, "html");
 						$this->mail->Send();
 
-            // mail($row['email'], $subject, $message, $headers);
-						/*$rows = [$row['email'], 'enrajet@gmail.com'];
-						for($i = 0; $i < count($rows); $i++) {
-	            mail($rows[$i], $subject, $message, $headers);
-						}*/
-            // mail("enrajet@gmail.com", $subject, $message, $headers);
-	     //        $subject = "Регистрация нового участника на обучение в ЦПОБП";
-						// 	$message .= "<p style='font-size:18px;color:blue;margin-bottom:20px;'>Регистрация нового участника на обучение в ЦПОБП:</p>
-						// 	<p style='font-size:15px;'><b>Имя участника:</b> ".$row['name']
-						// 	."<br><b>Компания:</b> ".$row['company']
-						// 	."<br><b>Телефон:</b> ".$row['phone']
-						// 	."<br><b>Email:</b> ".$row['email']
-						// 	."<br><b>Дата регистрации:</b> ".$row['reg_date']."</p><br><br>";
-						// 	$headers .= "Content-type: text/html; charset=utf-8".PHP_EOL
-						// 	."From: Info@lean-center.ru";
-					 //    mail('cpobp@lean-center.ru', $subject, $message, $headers);
-					 //    mail('enrajet@gmail.com', $subject, $message, $headers);
+						usleep(500000);
+
+						$to = "cpobp@lean-center.ru";
+            $subject = "Регистрация нового участника на обучение в ЦПОБП";
+						$message = "<p style='font-size:18px;color:blue;margin-bottom:20px;'>Регистрация нового участника на обучение в ЦПОБП:</p>
+						<p style='font-size:15px;'><b>Имя участника:</b> ".$row['name']
+						."<br><b>Компания:</b> ".$row['company']
+						."<br><b>Телефон:</b> ".$row['phone']
+						."<br><b>Email:</b> ".$row['email']
+						."<br><b>Дата регистрации:</b> ".$row['reg_date']."</p><br><br>";
+
+						mailsend::sendMail($to, $subject, $message, '', '', '', '', true);
+							// $headers .= "Content-type: text/html; charset=utf-8".PHP_EOL
+							// ."From: Info@lean-center.ru";
+					  //   mail('cpobp@lean-center.ru', $subject, $message, $headers);
+					  //   mail('enrajet@gmail.com', $subject, $message, $headers);
 
 					} else {
 						$_SESSION['reg']['res'] = "<div class='error'>Ошибка!</div>";
@@ -1191,21 +1224,22 @@ class model {
 		$headers .= "Content-type: text/html; charset=utf-8".PHP_EOL
 		."From: info@lean-center.ru";
     mail('andrey.p.kulikov@gmail.com', $subject, $message, $headers);
+    usleep(500000);
     mail('kuzin_ga@mail.ru', $subject, $message, $headers);
+    usleep(500000);
     mail('enrajet@gmail.com', $subject, $message, $headers);
 	}
 
 	public function send_mail() {
-		set_time_limit(250);
-		$query = "SELECT `name`, `email`, `by` FROM `send`";
+		set_time_limit(500);
+		$query = "SELECT `name`, `email`, `employee` FROM `send_mail` WHERE id > 0 AND id < 50";
 		$rows = $this->get_data($query);
-		// echo $_SERVER['DOCUMENT_ROOT'].'  '.$_SERVER['REQUEST_URI'];
-		// mailsend::sendMail('enrajet@gmail.com', 'test', 'content', '/home/openadv7/public_html/lean-center.net/userfiles/files/LEAN-CENTER.RU_N2.pdf', '', '', '', true);
+
 		for($i = 0; $i < count($rows); $i++) {
 			if(empty($rows[$i]['name'])) $rows[$i]['name'] = 'Участник портала';
 			$subject = "Второй номер журнала LEAN-CENTER.RU";
 			$message = "<p style='color:#000;'>Уважаемый(ая) <b>".$rows[$i]['name']."</b>!</p>
-			<p style='margin:0; padding:0; color:#000;'>По просьбе <b>".$rows[$i]['by']."</b> направляем Вам только что вышедший второй номер журнала <a href='http://lean-center.ru/' target='_blank'>LEAN-CENTER.RU</a> (в приложении).</p>
+			<p style='margin:0; padding:0; color:#000;'>По просьбе <b>".$rows[$i]['employee']."</b> направляем Вам только что вышедший второй номер журнала <a href='http://lean-center.ru/' target='_blank'>LEAN-CENTER.RU</a> (в приложении).</p>
 			<p style='font-size:17px; margin:0; padding:0; line-height:100%; color:#000;'>В нем Вы узнаете:</p>
 			<ul style='margin:0; padding:0;'>
 				<li style='margin:0; padding-left:15px; color:#000;'><b>-</b> Тема номера: Удаленный режим работы - преимущества и «подводные камни», как для работника, так и работодателя</li>
@@ -1213,27 +1247,39 @@ class model {
 				<li style='margin:0; padding-left:15px; color:#000;'><b>-</b> Как бороться с перепроизводством</li>
 				<li style='margin:0; padding-left:15px; color:#000;'><b>-</b> Опыт проектов: История компании Arvato</li>
 				<li style='margin:0; padding-left:15px; color:#000;'><b>-</b> Влияние инцидентов на управление уровнем сервиса: опыт нефтегазовой компании</li>
-				<li style='margin:0; padding-left:15px; color:#000;'><b>-</b> Интервью с Эльдаром Муратов о собственном опыте участия в проекте «Команда для оптимизации»</li>
+				<li style='margin:0; padding-left:15px; color:#000;'><b>-</b> Интервью с Эльдаром Муратовым о собственном опыте участия в проекте «Команда для оптимизации»</li>
 			</ul>
 			<p style='margin:0; padding:0; color:#000;'>Приятного чтения!</p>
 			<p style='margin:0; padding:0; color:#000;'>С уважением, редакция журнала <a href='http://lean-center.ru/' target='_blank'>LEAN-CENTER.RU</a></p>
 			<p style='margin:0; padding:0; color:#000;'><b>+7 (495) 723-18-50</b>, <a href='mailto:info@lean-center.ru'>info@lean-center.ru</a></p>";
-			// $headers = "Content-type: text/html; charset=utf-8".PHP_EOL
-			// ."From:info@lean-center.ru";
 			$to = $rows[$i]['email'];
-			mailsend::sendMail($to, $subject, $message, '/home/openadv7/public_html/lean-center.net/userfiles/files/LEAN-CENTER.RU_N2.pdf', '', '', '', true);
-			usleep(500000);
+			mailsend::sendMail($to, $subject, $message, $_SERVER['DOCUMENT_ROOT'].config::FILES.'LEAN-CENTER.RU_N2.pdf', '', '', '', true);
+			usleep(350000);
 		}
-		/*$this->mail->Subject('test');
-		$this->mail->From("Lean-center;info@lean-center.ru");
-		$this->mail->To('enrajet@gmail.com');
-		$this->mail->Body('teste', "html");
-		$this->mail->Attach("/home/openadv7/public_html/lean-center.net/userfiles/files/LEAN-CENTER.RU_N2.pdf", "LEAN-CENTER.RU_N2.pdf", "", "attachment");
-		$this->mail->Send();*/
-		// }
-		// }
-		// mail($to[0], $subject[0], $message[0], $headers[0]);
-		// print_r($subject[0]);
+	}
+
+	public function new_year($first, $last) {
+		set_time_limit(500);
+		$query = "SELECT `name`, `email` FROM `send` WHERE id BETWEEN ? AND ?";
+		$stmt = $this->db->prepare($query);
+		$stmt->execute([$first, $last]);
+		$rows = [];
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$rows[] = $row;
+		}
+		for($i = 0; $i < count($rows); $i++) {
+			if(empty($rows[$i]['name'])) $rows[$i]['name'] = 'Участник портала';
+			$subject = "Открытка С Новым годом!";
+			$message = "<p style='color:#333; font-size:17px; font-weight:bold; margin-top:0;'>Уважаемый(ая, ые) ".$rows[$i]['name']."!</p>
+			<p style='color:#333; font-size:17px;'>В наш дом приходит Новый год и Рождество!<br>
+			Пусть новый год принесет Вам и Вашим родным и близким любви, мира и всех благ!<br>
+			Здоровья Вам и счастья!</p>
+			<p style='color:#333; font-size:15px; font-style:italic;'>Команда Консалтинговой лаборатории «Открытые инновации» и портала <a href='http://lean-center.ru/' target='_blank'>LEAN-CENTER.RU</a></p>
+			<img src='".config::PATH."userfiles/files/new_year.jpg' alt='Открытка С Новым годом!' title='С Новым годом!'>";
+			$to = $rows[$i]['email'];
+			mailsend::sendMail($to, $subject, $message, '', '', '', '', true);
+			usleep(310000);
+		}
 	}
 }
 ?>

@@ -25,8 +25,9 @@
 		<section class="registration">
 		<p><span>Впервые здесь?</span> Зарегистрироваться</p>
 		<form method="post" action="" id="registr_form">
-			<input type="text" name="reg_email" id="reg_email" placeholder="E-mail">
-			<input type="password" name="reg_pass" id="reg_pass" placeholder="Пароль">
+			<input type="text" name="reg_email" id="reg_email" placeholder="E-mail" autocomplete="off">
+			<input type="text" name="reg_name" id="reg_name" placeholder="Ваше имя" autocomplete="off">
+			<input type="password" name="reg_pass" id="reg_pass" placeholder="Пароль" autocomplete="off">
 			<input type="submit" name="reg" id="submit_reg" value="Зарегистрироваться">
 		</form>
 		</section> <!-- .registration -->

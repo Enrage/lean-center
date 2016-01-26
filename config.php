@@ -5,7 +5,7 @@ class config {
 	// Username
 	const USER = 'openadv7_lean';
 	// Password
-	const PASS = '12qWjiD0_.';
+	const PASS = '12qWjiD0';
 	// Database
 	const DB = 'openadv7_lean';
 	// Полный путь
@@ -14,6 +14,8 @@ class config {
 	const PATH = 'http://localhost/lean-center.ru/';
 	// Активный шаблон
 	const TEMPLATE = 'view/lean-center/';
+	// Путь до файлов
+	const FILES = '/userfiles/files/';
 	// Модель
 	const MODEL = 'model/model.php';
 	// Функции

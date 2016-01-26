@@ -2,14 +2,14 @@ $(document).ready(function() {
 
 	// Top Slider
 	$("#slider3").responsiveSlides({
-    manualControls: '#slider3-pager',
-    speed: 1800,
-    pager: false,
-    timeout: 5000,
-    nav: false,
-    prevText: "<",
-    nextText: ">"
-  });
+		manualControls: '#slider3-pager',
+		speed: 1800,
+		pager: false,
+		timeout: 5000,
+		nav: false,
+		prevText: "<",
+		nextText: ">"
+	});
 
 	// Появление блока поиска
 	$('.search').click(function() {
@@ -47,7 +47,76 @@ $(document).ready(function() {
 		});
 	});*/
 
-	// Исчезновение результата регистрации через 3 секунды
+	$('.test').find('div:first').show();
+
+	$('.paginat a').on('click', function() {
+		if($(this).attr('class') == 'nav-active') return false;
+
+		var link = $(this).attr('href');
+		var prevActive = $('.paginat > a.nav-active').attr('href');
+
+		$('.paginat > a.nav-active').removeClass('nav-active');
+		$(this).addClass('nav-active');
+
+		$(prevActive).fadeOut(25, function() {
+			$(link).fadeIn();
+		});
+		return false;
+	});
+
+	// Блокировка кнопки следующий вопрос на последнем вопросе
+	$('.paginat a:last').on('click', function() {
+		$('.next_q').attr('disabled', 'disabled');
+	});
+
+	// Разблокировка кнопки следующий вопрос на предыдущих вопросах
+	$('.paginat a:not(:last)').on('click', function() {
+		$('.next_q').removeAttr('disabled');
+	});
+
+	// Переход к следующему вопросу при нажатии на кнопку Следующий вопрос, кроме последнего
+	$('.next_q').click(function() {
+		var length = $('.paginat a').length - 1;
+		$('.paginat a').each(function(index) {
+			if($(this).hasClass('nav-active') && index != length) {
+				$(this).removeClass('nav-active').next('a').addClass('nav-active');
+				$('.question').fadeOut(25).eq(index+1).fadeIn();
+				return false;
+			} else if (index == length - 2) {
+				$('.next_q').attr('disabled', 'disabled');
+			}
+		});
+	});
+
+	$('#btn').click(function() {
+		var test = $('#test_id').text();
+		var res = {'test':test};
+		$('.question').each(function() {
+			var id = $(this).data('id');
+			res[id] = $('input[name=question-' + id + ']:checked').val();
+		});
+		$.ajax({
+			url: 'index.php?view=test&test_id=1',
+			type: 'POST',
+			data: res,
+			cache: false,
+			success: function(res) {
+				$('.result').html($(res).find('.result_test'));
+				$('#btn').attr('disabled', 'disabled');
+
+				$('.questions > .ok').each(function() {
+					if($(this).text() === '') {
+				    $(this).remove();
+					}
+				});
+			},
+			error: function() {
+				alert('Error');
+			}
+		});
+	});
+
+	// Исчезновение результата регистрации через 5 секунд
 	$('.success').delay(5000).fadeOut('slow');
 	$('.err').delay(5000).fadeOut('slow');
 
@@ -75,23 +144,15 @@ $(document).ready(function() {
 	$('#registr_form').submit(function() {
 		var abort = false;
 		var email = $('#reg_email');
+		var name = $('#reg_name');
 		var pass = $('#reg_pass');
-		if(email.val() === '' && pass.val() !== '') {
-			$('.error').remove();
-			email.after('<div class="error" style="position:absolute; top:-200px; margin:0 auto; width:270px;">Вы не заполнили email!</div>');
-			abort = true;
-		}
-		if(pass.val() === '' && email.val() !== '') {
-			$('.error').remove();
-			pass.after('<div class="error" style="position:absolute; top:-200px; margin:0 auto; width:270px;">Вы не заполнили пароль!</div>');
-			abort = true;
-		} else if(email.val() === '' && pass.val() === '') {
-			$('.error').remove();
-			pass.after('<div class="error" style="position:absolute; top:-200px; margin:0 auto; width:270px;">Вы не заполнили email и пароль!</div>');
+		if(email.val() === '' || name.val() === '' || pass.val() === '') {
+			$('.error_reg').remove();
+			email.after('<div class="error_reg" style="position:absolute; top:-200px; margin:0 auto; width:270px;">Вы не заполнили обязательные поля!</div>');
 			abort = true;
 		} else if(pass.val().length > 0 && pass.val().length < 6) {
-			$('.error').remove();
-			pass.after('<div class="error" style="position:absolute; top:-210px; margin:0 auto; width:270px;">Пароль должен содержать не менее 6 символов!</div>');
+			$('.error_reg').remove();
+			pass.after('<div class="error_reg" style="position:absolute; top:-210px; margin:0 auto; width:270px;">Пароль должен содержать не менее 6 символов!</div>');
 			abort = true;
 		}
 		if(abort) return false;

@@ -111,10 +111,6 @@
 
 		<p>Свяжитесь с нами: <a href="mailto:info@lean-center.ru">info@lean-center.ru</a></p><br><br>
 
-		<form method="post" action="">
-			<input type="submit" name="send_mail" value="1" style="cursor:pointer;">
-		</form>
-
 		<h3><b>Правила нашего портала:</b></h3>
 		<ol>
 			<li>Не разрешается публиковать оскорбительные и некорректные публикации, а также комментарии к публикациям.</li>

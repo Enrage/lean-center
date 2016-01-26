@@ -2,7 +2,7 @@
 define('LEAN', true);
 session_start();
 header("Content-Type:text/html;charset=UTF-8");
-ini_set('max_execution_time', 250);
+// ini_set('max_execution_time', 500);
 
 function __autoload($c) {
 	if(file_exists("controller/".$c.".php")) {

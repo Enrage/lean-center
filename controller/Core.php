@@ -6,6 +6,7 @@ abstract class Core {
 	public function __construct() {
 		$this->m = new model();
 		$this->met = new method();
+		$this->t = new tests();
 	}
 	public function get_body($inc) {
 		$content = $this->get_content();
