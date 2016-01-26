@@ -118,7 +118,6 @@ class tests extends model {
 		$correct_answer_count = $all_count - $incorrect_answer_count;
 		$percent = round(($correct_answer_count / $all_count * 100), 2);
 		$print_res .= '<div class="result_test">';
-		// if($percent < 20) return '<p class="session false">Вы набрали менее 25% правильных ответов. Попробуйте еще раз.</p>';
 		// if($correct_answer_count < 3) {
 		// 	$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
 		// }
