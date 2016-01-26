@@ -1,5 +1,5 @@
 <?php
-require_once 'model/method.php';
+defined('LEAN') or die('Access Denied');
 class tests extends model {
 	private $db;
 	private $id;
@@ -62,7 +62,6 @@ class tests extends model {
 	public function get_correct_answers($test) {
 		if(!$test) return false;
 		$query = "SELECT q.id AS question_id, q.value AS value, a.id AS answer_id FROM questions q LEFT JOIN answers a ON q.id = a.parent_question WHERE q.parent_test = ? AND a.correct_answer = '1'";
-
 		$stmt = $this->db->prepare($query);
 		$stmt->execute([$test]);
 		$data = [];
@@ -121,18 +120,17 @@ class tests extends model {
 		// if($correct_answer_count < 3) {
 		// 	$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
 		// }
-		if($correct_value < 3) {
+		if($correct_value > 2) {
+			$print_res .= '<p class="session true">Поздравляем, Вы успешно сдали тестирование!</p>';
+			// $to = $_SESSION['auth']['email'];
+			// mailsend::sendMail($to, 'Успешное прохождение тестирования', 'Спасибо за прохождение тестирования', $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/cert_{$this->id}.png", '', '', '', true);
+		}
+		else {
 			$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
 		}
 		// if($correct_value < 30) {
 		// 	$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
 		// }
-		elseif($correct_value > 2) {
-			$print_res .= '<p class="session true">Поздравляем, Вы успешно сдали тестирование!</p>';
-			$this->create_sert();
-			$to = $_SESSION['auth']['email'];
-			mailsend::sendMail($to, 'Успешное прохождение тестирования', 'Спасибо за прохождение тестирования', $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/cert_{$this->id}.png", '', '', '', true);
-		}
 
 		// Вывод результатов
 		$print_res .= '<div class="questions">';
@@ -205,7 +203,7 @@ class tests extends model {
 		return $im;
 	}*/
 
-	private function create_sert() {
+	public function create_sert() {
 		$img = function($img_name) {
 			$im = imagecreatefrompng($img_name);
 			$color = imagecolorallocate($im, 0, 180, 210);
@@ -214,16 +212,16 @@ class tests extends model {
 			$fs_email = 30;
 			$fs_name = 65;
 			$date = date('d.m.Y', $this->date);
-			imagettftext($im, $fs_date, 0, 2500, 365, $color, $font, $date);
-			imagettftext($im, $fs_email, 0, 2500, 500, $color, $font, $this->email);
-			imagettftext($im, $fs_name, 0, 1050, 980, $color, $font, $this->name);
+			// $len = 1500 - (int)(strlen($this->name));
+			imagettftext($im, $fs_date, 0, 2600, 365, $color, $font, $date);
+			imagettftext($im, $fs_email, 0, 2490, 500, $color, $font, $this->email);
+			imagettftext($im, $fs_name, 0, (int)(1200 - strlen($this->name)), 980, $color, $font, $this->name);
 			return $im;
 		};
 
 		if(isset($_POST)) {
 			header("Content-type: image/png");
-			$i = $img($_SERVER['DOCUMENT_ROOT'].config::FILES.'cert.png');
-			// $img = $this->load_png($_SERVER['DOCUMENT_ROOT'].'/lean-center.ru'.config::FILES.'cert.png');
+			$i = $img($_SERVER['DOCUMENT_ROOT'].'/userfiles/files/cert.png');
 			imagepng($i, $_SERVER['DOCUMENT_ROOT']."/userfiles/tmp/cert_{$this->id}.png");
 			imagedestroy($i);
 		}

@@ -109,6 +109,7 @@ $(document).ready(function() {
 				    $(this).remove();
 					}
 				});
+				console.log(res);
 			},
 			error: function() {
 				alert('Error');

@@ -30,7 +30,17 @@ class test extends Core {
 			// данные теста
 			$test_all_data = $this->t->get_test_data($test);
 			$test_all_data_result = $this->t->get_test_data_result($test_all_data, $res, $_POST);
+			// $this->met->p_r($test_all_data_result);
+			foreach ($test_all_data_result as $key => $item) {
+				if(!isset($item['incorrect_answer'])) {
+					$value = $value + $item['value'];
+				}
+			}
+			if($value > 3) {
+				$this->t->create_sert();
+			}
 			echo $this->t->print_result($test_all_data_result);
+			// $this->met->p_r($value);
 			die;
 		}
 	}

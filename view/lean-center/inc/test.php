@@ -16,7 +16,6 @@ $post = $this->get_post();
 		<?php if(is_array($get_test)): ?>
 		<section class="tests">
 			<h2>Тестирование</h2>
-
 			<article class="test">
 				<h3 class="ntest">Тест по бережливому производству №<span id="test_id"><?=$test_id?></span></h3>
 					<?php foreach($get_test as $id_question => $item): ?>
@@ -26,9 +25,11 @@ $post = $this->get_post();
 							<p class="q"><?=$answer?></p>
 							<?php else: ?>
 							<p class="a">
-								<?php if ($id_answer != 'value'): ?>
+								<?php if($id_answer != 'value'): ?>
 								<input type="radio" name="question-<?=$id_question?>" id="answer-<?=$id_answer?>" value="<?=$id_answer?>">
 								<label for="answer-<?=$id_answer?>"><?=$answer?></label>
+								<?php else: ?>
+								<p class="italic">Количество баллов: <?=$answer?></p>
 								<?php endif ?>
 							</p>
 							<?php endif; ?>

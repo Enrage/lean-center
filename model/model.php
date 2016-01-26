@@ -684,7 +684,6 @@ class model {
 			try {
 				if(!$stmt = $this->db->prepare($query)) throw new Exception("Error Prepare registration select");
 				$stmt->execute([$reg_email]);
-
 				if($stmt->rowCount() > 0) {
 					$_SESSION['reg']['res'] = "<div class='error'>Пользователь с таким E-mail уже оставлял заявку на обучение!</div>";
 					$_SESSION['reg']['reg_name'] = $reg_name;
