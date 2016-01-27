@@ -120,15 +120,12 @@ class tests extends model {
 		// if($correct_answer_count < 3) {
 		// 	$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
 		// }
-		if($correct_value > 2) {
+		if($correct_value > 3) {
 			$print_res .= '<p class="session true">Поздравляем, Вы успешно сдали тестирование!</p>';
 		}
 		else {
 			$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
 		}
-		// if($correct_value < 30) {
-		// 	$print_res .= '<p class="session false">Извините, Вы не прошли тест!</p>';
-		// }
 
 		// Вывод результатов
 		$print_res .= '<div class="questions">';
